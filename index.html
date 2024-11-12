@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordenação com Bubble Sort</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 10px;
+        }
+
+        input, button {
+            margin: 10px 0;
+            padding: 10px;
+            width: 300px;
+            font-size: 1rem;
+        }
+
+        #output {
+            margin-top: 20px;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <h2>Ordenação de Lista com Bubble Sort</h2>
+    <label for="numbers">Digite os números separados por vírgula:</label>
+    <input type="text" id="numbers" placeholder="Ex: 10, 2, 15, 7">
+    <br>
+    <button onclick="sortNumbers()">Ordenar Lista</button>
+
+    <div id="output"></div>
+
+    <script>
+        function sortNumbers() {
+            // Pegar os números digitados
+            var input = document.getElementById('numbers').value;
+            var numbers = [];
+            var currentNumber = '';
+
+            // Loop manual para dividir os números
+            for (var i = 0; i < input.length; i++) {
+                var char = input[i];
+
+                if (char !== ',') {
+                    currentNumber += char; // Adiciona caracteres ao número
+                } else {
+                    if (currentNumber.trim() !== '') {
+                        numbers.push(parseInt(currentNumber.trim())); // Converte para número e adiciona ao array
+                    }
+                    currentNumber = ''; // Limpa o número atual
+                }
+            }
+
+            // Adicionar o último número
+            if (currentNumber.trim() !== '') {
+                numbers.push(parseInt(currentNumber.trim()));
+            }
+
+            // Verifica se a lista de números não está vazia
+            if (numbers.length === 0) {
+                document.getElementById('output').textContent = 'Por favor, insira uma lista válida de números.';
+                return;
+            }
+
+            // Algoritmo Bubble Sort (sem métodos prontos)
+            for (var i = 0; i < numbers.length; i++) {
+                for (var j = 0; j < numbers.length - 1; j++) {
+                    if (numbers[j] > numbers[j + 1]) {
+                        // Troca os números de lugar
+                        var temp = numbers[j];
+                        numbers[j] = numbers[j + 1];
+                        numbers[j + 1] = temp;
+                    }
+                }
+            }
+
+            // Exibir a lista ordenada
+            var result = '';
+            for (var i = 0; i < numbers.length; i++) {
+                result += numbers[i] + ', ';
+            }
+
+            // Remover a vírgula extra no final
+            if (result.length > 0) {
+                result = result.slice(0, -2);
+            }
+
+            document.getElementById('output').textContent = 'Lista Ordenada: ' + result;
+        }
+    </script>
+</body>
+</html>
