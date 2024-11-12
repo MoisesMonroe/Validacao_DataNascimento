@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ordenação com Bubble Sort</title>
+    <title>Formulário com Validações e Cálculo de Idade</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,78 +18,67 @@
             font-size: 1rem;
         }
 
-        #output {
-            margin-top: 20px;
-            font-size: 1.2rem;
+        .error {
+            color: red;
         }
     </style>
 </head>
 <body>
-    <h2>Ordenação de Lista com Bubble Sort</h2>
-    <label for="numbers">Digite os números separados por vírgula:</label>
-    <input type="text" id="numbers" placeholder="Ex: 10, 2, 15, 7">
-    <br>
-    <button onclick="sortNumbers()">Ordenar Lista</button>
+    <h2>Formulário de Cadastro</h2>
+    <form id="form">
+        <label for="name">Nome:</label>
+        <input type="text" id="name" name="name">
+        <br>
 
-    <div id="output"></div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email">
+        <br>
+
+        <label for="dob">Data de Nascimento:</label>
+        <input type="date" id="dob" name="dob">
+        <br>
+
+        <button type="submit">Enviar</button>
+        <p id="age"></p>
+        <p id="error-message" class="error"></p>
+    </form>
 
     <script>
-        function sortNumbers() {
-            // Pegar os números digitados
-            var input = document.getElementById('numbers').value;
-            var numbers = [];
-            var currentNumber = '';
+        // Define a data máxima para o campo de data de nascimento
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('dob').setAttribute('max', today);
 
-            // Loop manual para dividir os números
-            for (var i = 0; i < input.length; i++) {
-                var char = input[i];
+        document.getElementById('form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Impede o envio do formulário
 
-                if (char !== ',') {
-                    currentNumber += char; // Adiciona caracteres ao número
-                } else {
-                    if (currentNumber.trim() !== '') {
-                        numbers.push(parseInt(currentNumber.trim())); // Converte para número e adiciona ao array
-                    }
-                    currentNumber = ''; // Limpa o número atual
-                }
-            }
+            // Limpar mensagens de erro e idade anterior
+            document.getElementById('error-message').textContent = '';
+            document.getElementById('age').textContent = '';
 
-            // Adicionar o último número
-            if (currentNumber.trim() !== '') {
-                numbers.push(parseInt(currentNumber.trim()));
-            }
+            // Obter os valores dos campos
+            var name = document.getElementById('name').value;
+            var email = document.getElementById('email').value;
+            var dob = document.getElementById('dob').value;
 
-            // Verifica se a lista de números não está vazia
-            if (numbers.length === 0) {
-                document.getElementById('output').textContent = 'Por favor, insira uma lista válida de números.';
+            // Validação simples dos campos
+            if (!name || !email || !dob) {
+                document.getElementById('error-message').textContent = 'Todos os campos são obrigatórios!';
                 return;
             }
 
-            // Algoritmo Bubble Sort (sem métodos prontos)
-            for (var i = 0; i < numbers.length; i++) {
-                for (var j = 0; j < numbers.length - 1; j++) {
-                    if (numbers[j] > numbers[j + 1]) {
-                        // Troca os números de lugar
-                        var temp = numbers[j];
-                        numbers[j] = numbers[j + 1];
-                        numbers[j + 1] = temp;
-                    }
-                }
+            // Cálculo da idade
+            var birthDate = new Date(dob);
+            var todayDate = new Date();
+            var age = todayDate.getFullYear() - birthDate.getFullYear();
+            var m = todayDate.getMonth() - birthDate.getMonth();
+
+            if (m < 0 || (m === 0 && todayDate.getDate() < birthDate.getDate())) {
+                age--; // Subtrai um ano se o aniversário não aconteceu ainda
             }
 
-            // Exibir a lista ordenada
-            var result = '';
-            for (var i = 0; i < numbers.length; i++) {
-                result += numbers[i] + ', ';
-            }
-
-            // Remover a vírgula extra no final
-            if (result.length > 0) {
-                result = result.slice(0, -2);
-            }
-
-            document.getElementById('output').textContent = 'Lista Ordenada: ' + result;
-        }
+            // Exibir a idade
+            document.getElementById('age').textContent = 'Sua idade é: ' + age + ' anos';
+        });
     </script>
 </body>
 </html>
